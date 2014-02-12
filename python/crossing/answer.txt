@@ -1,0 +1,31 @@
+Execution time: Unknown, Answer: Unknown
+Env:
+#! /usr/bin/env python
+# -*- coding: utf-8 -*-
+#I cannot program that is end soon.
+#Then I do not have answer, but I want to know the answer,
+#I submit.
+#My program is fallowing.
+import time
+
+def crossing(lst):
+	count = 0
+	rest = []
+	for i in xrange(len(lst)):
+		count += judge(i, lst.index(i+1), lst, rest)
+
+	return count
+
+def judge(pre_index, next_index, lst, rest):
+	count = next_index - len([x for x in rest if x < next_index]) 
+	rest.append(next_index)
+	return count
+
+if __name__ == '__main__':
+	File = open(sys.argv[1], 'r')
+	lst = []
+	for i in File:
+		lst.append(int(i))
+	first = time.clock()
+	print crossing(lst)
+	print time.clock() - first 
