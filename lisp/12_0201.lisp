@@ -1,0 +1,5 @@
+(defun sublists(list)
+  (let ((y nil))
+	(do ((x list (cdr x)))
+	  ((endp x) y)
+	  (setq y (cons x y)))))
