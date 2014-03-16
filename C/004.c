@@ -3,6 +3,7 @@
 int main(void)
 {
 	int i, total = 0;
+	j = 1
 
 	for(i = 1; i <= 10;  i++)
 	{
