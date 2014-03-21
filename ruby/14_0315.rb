@@ -98,36 +98,27 @@ class BinaryTreeNode
 	def _delete()
 		def change_node(node)
 			if @pare != nil
-				if @pare.right == self
-					@pare.right = node
-				else
-					@pare.left = node
-				end
-				node.pare = @pare
+					@pare.right = node if @pare.right == self
+					@pare.left = node if @pare.left == self
 			end
+			node.pare = @pare
 		end
 		def find_max(node)
-			return node if node.left == nil and node.right == nil
+			return node if node.right == nil
 			find_max(node.right)
 		end
 		if @left == nil and @right == nil
 			_delete_node()
-			return 0
 		elsif @left == nil
 			change_node(@right)
-			return 0
 		elsif @right == nil
 			change_node(@left)
-			return 0
+		else
+			node = find_max(@left)
+			node.change_node(node.left) if node.left != nil
+			@word = node.word
+			node._delete_node()
 		end
-		node = find_max(@left)
-		node.pare.right = nil
-		str = @word
-		@word = node.word
-		node._delete_node()
-		node = _find_root()
-		node.add(str)
-		return 0
 	end
 
 	def _delete_node()
@@ -182,17 +173,9 @@ def add_from_line(str, root)
 	str.split(' ').map{|item| root.add(item)}
 end
 
-def main()
-	rootNode = BinaryTreeNode.new(nil, nil)
-	rootNode.add('asdf')
-	rootNode.add('adf')
-	rootNode.add('asf')
-	rootNode.add('sdf')
-	rootNode.remove('d', 0)
-	rootNode.printTree(1)
-end
+Signal.trap(:INT){break}
 
-def amain()
+def main()
 	rootNode = BinaryTreeNode.new(nil, nil)
 	if ARGV != nil
 		c = 0
@@ -203,12 +186,17 @@ def amain()
 				while(str = f.gets)
 					add_from_line(str, rootNode)
 				end
+				f.close()
 			end
 		end
 	end
 	if rootNode.word == nil
-		while(str = f.gets)
-			add_from_line(str, rootNode)
+		begin
+			while(str = STDIN.gets)
+				add_from_line(str, rootNode)
+			end
+		rescue
+			print "\n"
 		end
 	end
 	if ARGV == nil or c == ARGV.size
