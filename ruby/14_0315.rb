@@ -3,7 +3,7 @@
 
 class BinaryTreeNode
 	attr_accessor :pare, :word, :left, :right
-	def initialize(pare = nil, word)
+	def initialize(pare = nil, word = nil)
 		@word = word
 		@pare = pare
 		@left = nil
@@ -13,6 +13,7 @@ class BinaryTreeNode
 	def add(str)
 		def _add(str)
 			return 1 if @word == str
+			@word = str if @word == nil
 			if str < @word
 				if @left == nil
 					@left = BinaryTreeNode.new(self, str)
@@ -40,30 +41,12 @@ class BinaryTreeNode
 	end
 
 	def printTree(order = 0)
-		def preprint()
-			print @word + "\n"
-			@left.preprint() if @left != nil
-			@right.preprint() if @right != nil
-		end
-		def midprint()
-			@left.midprint() if @left != nil
-			print @word + "\n"
-			@right.midprint() if @right != nil
-		end
-		def postprint()
-			@left.postprint() if @left != nil
-			@right.postprint() if @right != nil
-			print @word + "\n"
-		end
 		return 1 if @word == nil
-		case order
-		when 0 
-			preprint()
-		when 1
-			midprint()
-		when 2
-			postprint()
-		end
+		print @word + "\n" if order == 0
+		@left.printTree(order) if @left != nil
+		print @word + "\n" if order == 1
+		@right.printTree(order) if @right != nil
+		print @word + "\n" if order == 2
 	end
 
 	def subst(sstr, rstr)
@@ -92,7 +75,6 @@ class BinaryTreeNode
 		def _bfs(str, q)
 			while(node = q.shift)
 				if /#{str}/ =~ node.word
-					q.clear
 					node._delete()
 					return 0
 				end
@@ -101,13 +83,13 @@ class BinaryTreeNode
 			end
 		end
 		def _remove_all(str)
-			@word = nil if /#{str}/ =~ @word
+			@word = false if /#{str}/ =~ @word
 			left._remove_all(str) if @left != nil
 			right._remove_all(str) if @right != nil
 		end
 		if f == 0
 			_bfs(str, [self])
-		elsif f == 1
+		else
 			_remove_all(str)
 			sort()
 		end
@@ -171,7 +153,7 @@ class BinaryTreeNode
 			else
 				r = []
 			end
-			if @word == nil
+			if @word == false
 				return l + r
 			end
 			return [@word] + l + r
@@ -180,9 +162,9 @@ class BinaryTreeNode
 		delete_all()
 		root = _find_root()
 		root.word = q.shift
-	while str = q.shift
-		add(str) 
-	end
+		while str = q.shift
+			add(str) 
+		end
 	end
 
 	def delete_all()
@@ -195,22 +177,67 @@ class BinaryTreeNode
 	end
 end
 
+def add_from_line(str, root)
+	str.chomp
+	str.split(' ').map{|item| root.add(item)}
+end
+
 def main()
-	rootNode = BinaryTreeNode.new(nil, 'asdf')
-	rootNode.add('fdas')
-	rootNode.add('das')
-	rootNode.add('as')
-	rootNode.add('s')
-	rootNode.add('fdas')
-	rootNode.add('fdaz')
-	rootNode.add('fdds')
-	rootNode.add('zdas')
-	rootNode.printTree(0)
-	print "\n\n"
-	p rootNode.subst('da', 'zaaaa')
+	rootNode = BinaryTreeNode.new(nil, nil)
+	rootNode.add('asdf')
+	rootNode.add('adf')
+	rootNode.add('asf')
+	rootNode.add('sdf')
+	rootNode.remove('d', 0)
 	rootNode.printTree(1)
 end
 
-if __FILE__ == $0
-	main()
+def amain()
+	rootNode = BinaryTreeNode.new(nil, nil)
+	if ARGV != nil
+		c = 0
+		ARGV.each do |i|
+			if File.exist?(i)
+				c += 1
+				f = open(i, 'r')
+				while(str = f.gets)
+					add_from_line(str, rootNode)
+				end
+			end
+		end
+	end
+	if rootNode.word == nil
+		while(str = f.gets)
+			add_from_line(str, rootNode)
+		end
+	end
+	if ARGV == nil or c == ARGV.size
+		rootNode.printTree(1)
+	else
+		i = 0
+		while(i < ARGV.size)
+			if ARGV[i] == '-r'
+				lst = ARGV[i+1].split('/')
+				lst[2] = 0 if lst[2] == '0'
+				rootNode.remove(lst[1], lst[2])
+				i += 1
+			elsif ARGV[i] == '-p'
+				if ARGV[i+1] =~ /[0-2]/
+					rootNode.printTree(ARGV[i+1].to_i)
+					i += 1
+				else
+					rootNode.printTree()
+				end
+			elsif ARGV[i] == '-s'
+				lst = ARGV[i+1].split('/')
+				rootNode.subst(lst[1], lst[2])
+				i += 1
+			end
+			i += 1
+		end
+	end
 end
+
+	if __FILE__ == $0
+		main()
+	end
