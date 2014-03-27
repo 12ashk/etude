@@ -16,6 +16,7 @@ int check(int **copy, int i, int j, int c){
 		return 1;
 	}else return 0;
 }
+
 int solve(int **copy, int i, int j, int *goal, int c)
 {
 	if(copy[i][j] == 0){
