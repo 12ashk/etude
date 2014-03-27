@@ -1,4 +1,0 @@
-(defun fact(n ans)
-  (if (= n 1)
-	  ans
-	  (fact (- n 1) (* ans n))))
