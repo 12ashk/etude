@@ -57,6 +57,8 @@ class genetic_algorithm(object):
                 if random.random() < self.mutprob and i < self.num:
                     ngen.append(self.mutation(self.array[self.randnum()]))
                     i+=1
+                ngen.append(self.array[self.randnum()])
+                i+=1
             self.array = ngen
             c += 1
         return c
