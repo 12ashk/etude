@@ -47,8 +47,8 @@ Pictures::Pictures(int picnum, string adress){
 	slider = 0;
 	picindx = 0;
 	image = new Mat[2];
-	image[0] = imread("../raw_16tiff.tiff");
-	image[1] = imread("../raw_16tiff.tiff", 0);
+	image[0] = imread("~/pic/140507_1_B0L000.TIF");
+	image[1] = imread("~/pic/140507_1_B0L000.TIF");
 
 	//	int a = (int)log10(picnum) + 1;
 	//	char *str = new char[100];
@@ -63,9 +63,14 @@ Pictures::Pictures(int picnum, string adress){
 
 void Pictures::MouseCall(int event, int x, int y, int flags, void *param)
 {
+<<<<<<< HEAD
 	Pictures *self = static_cast<Pictures*>(param);
 	// fail to converting?
 	self->doMouseCall(event, x, y, flags);
+=======
+//	Pictures *self = static_cast<Pictures*>(param);
+	this->doMouseCall(event, x, y, flags);
+>>>>>>> origin/master
 }
 
 void Pictures::doMouseCall(int event, int x, int y, int flags)
@@ -98,9 +103,16 @@ void Pictures::main(void)
 	string name = "main window";
 	Mat temp = image[picindx].clone();
 	namedWindow(name, 1);
+<<<<<<< HEAD
 	//	createTrackbar("< >", name, &slider, picnum-1, on_trackbar, (void *)this);
 	setMouseCallback(name, MouseCall, (void *)this);
 	//	on_trackbar(0, (void *)this);
+=======
+//	createTrackbar("< >", name, &slider, picnum-1, on_trackbar, (void *)this);
+//	setMouseCallback(name, MouseCall, (void *)this);
+	setMouseCallback(name, MouseCall, (void *)temp);
+//	on_trackbar(0, (void *)this);
+>>>>>>> origin/master
 	while(1){
 		picindx=0;
 		if(finish){
