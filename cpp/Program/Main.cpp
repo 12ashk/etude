@@ -16,49 +16,55 @@ using namespace std;
 
 class Pictures
 {
-private:
-	Point **lst;
-	int flag;
-	bool finish;
-	Mat *image;
-	int picnum;
-	int picindx;
+	private:
+		Point **lst; //the list of ROI coordinates(x, y)
+		int flag; //the flag for Mouse Call
+		bool finish; //the flag for Mouse Call
+		Mat *image; //the array of images
+		int picnum; //number of pictures
+		int picindx; //index of displaying a picture
 
-public:
-	int slider;
-	Pictures(int picnum, string adress);
-	static void MouseCall(int event, int x, int y, int flags, void *param);
-	void doMouseCall(int event, int x, int y, int flags);
-	void main();
-	static void on_trackbar(int val, void *data);
-	void on_trackbar1(int val);
+	public:
+		//main process
+		void main();
+		Pictures(int picnum, string adress);
+		//static mouse call that call doMouseCall
+		static void MouseCall(int event, int x, int y, int flags, void *param);
+		//contents of mouse call
+		void doMouseCall(int event, int x, int y, int flags);
+		//static on trackbar
+		static void on_trackbar(int val, void *data);
+		//contents of trackbar
+		void on_trackbar1(int val);
+		int slider;//for trakcbar
 };
 
 Pictures::Pictures(int picnum, string adress){
 	lst = new Point*[picnum];
-	slider = 0;
-	for(int i = 0; i < picnum; i++) lst[i] = new Point[2];
+	for(int i = 0; i < picnum; i++) lst[i] = new Point[2];//for coordinates(x, y)
 	finish = false;
 	this->picnum = picnum;
+	slider = 0;
 	picindx = 0;
 	image = new Mat[2];
 	image[0] = imread("../raw_16tiff.tiff");
 	image[1] = imread("../raw_16tiff.tiff", 0);
 
-//	int a = (int)log10(picnum) + 1;
-//	char *str = new char[100];
-//	char *index = new char[a];
-//	for(int i = 0; i < picnum; i++){
-//		sprintf(index, str, i);
-//		cout << str <<endl;
-//		cout << adress + index << endl;
-//		image = imread(adress + "B0L" + index, 0);
-//	}
- }
+	//	int a = (int)log10(picnum) + 1;
+	//	char *str = new char[100];
+	//	char *index = new char[a];
+	//	for(int i = 0; i < picnum; i++){
+	//		sprintf(index, str, i);
+	//		cout << str <<endl;
+	//		cout << adress + index << endl;
+	//		image = imread(adress.str() + "B0L" + index.str(), 0);
+	//	}
+}
 
 void Pictures::MouseCall(int event, int x, int y, int flags, void *param)
 {
 	Pictures *self = static_cast<Pictures*>(param);
+	// fail to converting?
 	self->doMouseCall(event, x, y, flags);
 }
 
@@ -84,7 +90,7 @@ void Pictures::on_trackbar(int val, void *data){
 }
 
 void Pictures::on_trackbar1(int val){
-//	if(finish) picindx = val;
+	if(finish) picindx = val;
 }
 
 void Pictures::main(void)
@@ -92,9 +98,9 @@ void Pictures::main(void)
 	string name = "main window";
 	Mat temp = image[picindx].clone();
 	namedWindow(name, 1);
-//	createTrackbar("< >", name, &slider, picnum-1, on_trackbar, (void *)this);
+	//	createTrackbar("< >", name, &slider, picnum-1, on_trackbar, (void *)this);
 	setMouseCallback(name, MouseCall, (void *)this);
-//	on_trackbar(0, (void *)this);
+	//	on_trackbar(0, (void *)this);
 	while(1){
 		picindx=0;
 		if(finish){
@@ -110,11 +116,12 @@ int main(void)
 {
 	string adress;
 	int num = 2;
-//	cout << "Direcory Name: ";
-//	cin >> adress;
-//	cout << "number of pictures: ";
-//	cin >> num;
-	Pictures a(num, adress);
-	a.main();
+	//	cout << "Direcory Name: ";
+	//	cin >> adress;
+	//	cout << "number of pictures: ";
+	//	cin >> num;
+	Pictures *a = new Pictures(num, adress);
+	a->main();
+	delete a;
 	return 0;
 }
