@@ -22,13 +22,11 @@ for i in xrange(N):
 lst.sort()
 ans = [[lst[0][0], lst[0][1]]]
 if N > 1:
-    j = 0
     for i in lst[1:]:
-        if i[0] <= ans[j][1] and i[1] > ans[j][1]:
-            ans[j][1] = i[1]
-        elif i[0] > ans[j][1]:
+        if i[0] <= ans[-1][1] and i[1] > ans[-1][1]:
+            ans[-1][1] = i[1]
+        elif i[0] > ans[-1][1]:
             ans.append([i[0], i[1]])
-            j += 1
 
 for i in ans:
     print "%04d-%04d" % (i[0], i[1])
